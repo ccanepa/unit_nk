@@ -1,7 +1,14 @@
 from __future__ import unicode_literals
 
 import locale
-import unittest
+import sys
+
+# needed if @unittest.expectedFailure is used
+try:
+    import unittest2 as unittest
+except:
+    import unittest
+
 import unit_nk.unit_nk as nikola
 
 
@@ -31,14 +38,15 @@ class TestInformative(unittest.TestCase):
         self.assertTrue(0)
 
 
-class TestHarcodedFallbacksWork(unittest.TestCase):
-    # keep in sync with nikola.valid_locale_fallback
-    if sys.platform == 'win32':
-        self.assertTrue(is_valid_locale(str('English')))
-        self.assertTrue(is_valid_locale(str('C')))
-    else:
-        self.assertTrue(is_valid_locale(str('en_US.utf8')))
-        self.assertTrue(is_valid_locale(str('C')))
+class TestHarcodedFallbacks(unittest.TestCase):
+    def test_hardcoded_fallbacks_work(self):
+        # keep in sync with nikola.valid_locale_fallback
+        if sys.platform == 'win32':
+            self.assertTrue(nikola.is_valid_locale(str('English')))
+            self.assertTrue(nikola.is_valid_locale(str('C')))
+        else:
+            self.assertTrue(nikola.is_valid_locale(str('en_US.utf8')))
+            self.assertTrue(nikola.is_valid_locale(str('C')))
 
 
 class TestConfigLocale(unittest.TestCase):

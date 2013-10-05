@@ -92,7 +92,7 @@ def guess_locale_from_lang_windows(lang):
 
 def guess_locale_from_lang_linux(lang):
     # compatibility v6.0.4
-    return lang
+    return locale.normalize(lang).split('.')[0]
 
 
 _windows_locale_guesses = {
@@ -117,3 +117,4 @@ _windows_locale_guesses = {
     "tr_tr":  "Turkish",
     "eo":     "Esperanto",
 }
+

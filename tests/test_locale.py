@@ -177,5 +177,5 @@ class TestConfigLocale(unittest.TestCase):
         self.assertEquals(locales['en'], guess_locale_for_lang('en'))
 
     def test_informative(self):
-        import info
+        from . import info
         self.assertTrue(0)

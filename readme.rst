@@ -5,4 +5,4 @@ unit_nk
    :target: https://travis-ci.org/ccanepa/unit_nk
 
 
-helper to test nikola
+helper to test nikola, transitorio

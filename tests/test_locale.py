@@ -24,25 +24,21 @@ loc_Cutf8 = str('C.utf8')
 # en travis.
 # ademas estudiar el log de 2.6 a ver que onda.
 
-
-class TestExploreTravis(unittest.TestCase):
-    def test_C_locale(self):
-        self.assertTrue(nikola.is_valid_locale(loc_C), "'C' locale not available")
-
-    def test_Cutf8_locale(self):
-        self.assertTrue(nikola.is_valid_locale(loc_Cutf8), "'C.utf8' locale not available")
+class TestInformative(unittest.TestCase):
+    # switch assert to 0 to peek at how the host handle some locales
+    def test_informative(self):
+        from . import info
+        self.assertTrue(0)
 
 
-class TestTestPreconditions(unittest.TestCase):
-    """if this fails the other test in this module are mostly nonsense
-       failure probably means the OS support for the failing locale is not
-       instaled
-    """
-    def test_locale_eng_availability(self):
-        self.assertTrue(nikola.is_valid_locale(loc_eng), "META ERROR: locale for english should be valid")
-
-    def test_locale_esp_availability(self):
-        self.assertTrue(nikola.is_valid_locale(loc_spa), "META ERROR: locale for spanish should be valid")
+class TestHarcodedFallbacksWork(unittest.TestCase):
+    # keep in sync with nikola.valid_locale_fallback
+    if sys.platform == 'win32':
+        self.assertTrue(is_valid_locale(str('English')))
+        self.assertTrue(is_valid_locale(str('C')))
+    else:
+        self.assertTrue(is_valid_locale(str('en_US.utf8')))
+        self.assertTrue(is_valid_locale(str('C')))
 
 
 class TestConfigLocale(unittest.TestCase):
@@ -176,6 +172,14 @@ class TestConfigLocale(unittest.TestCase):
 
         self.assertEquals(locales['en'], guess_locale_for_lang('en'))
 
-    def test_informative(self):
-        from . import info
-        self.assertTrue(0)
+
+class TestTestPreconditions(unittest.TestCase):
+    """if this fails the other test in this module are mostly nonsense
+       failure probably means the OS support for the failing locale is not
+       instaled
+    """
+    def test_locale_eng_availability(self):
+        self.assertTrue(nikola.is_valid_locale(loc_eng), "META ERROR: locale for english should be valid")
+
+    def test_locale_esp_availability(self):
+        self.assertTrue(nikola.is_valid_locale(loc_spa), "META ERROR: locale for spanish should be valid")

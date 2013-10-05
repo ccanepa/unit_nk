@@ -22,8 +22,9 @@ def is_valid_locale(locale_n):
 
 def valid_locale_fallback(desired_locale=None):
     """returns a default fallback_locale, a string that locale.setlocale will accept"""
+    # Whenever fallbacks change, adjust test TestHarcodedFallbacksWork
     candidates_windows = [str('English'), str('C')]
-    candidates_linux = ['en.utf8', 'C.utf8']
+    candidates_linux = [str('en_US.utf8'), str('C')]
     candidates = candidates_windows if sys.platform == 'win32' else candidates_linux
     if desired_locale:
         candidates = list(candidates)
@@ -92,7 +93,12 @@ def guess_locale_from_lang_windows(lang):
 
 def guess_locale_from_lang_linux(lang):
     # compatibility v6.0.4
-    return locale.normalize(lang).split('.')[0]
+    if is_valid_locale(lang):
+        locale_n = lang
+    else:
+        # this works in Travis when locale support set by Travis suggestion
+        locale_n = locale.normalize(lang).split('.')[0]
+    return locale_n
 
 
 _windows_locale_guesses = {

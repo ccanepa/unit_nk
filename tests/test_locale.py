@@ -45,7 +45,11 @@ class TestHarcodedFallbacks(unittest.TestCase):
             self.assertTrue(nikola.is_valid_locale(str('English')))
             self.assertTrue(nikola.is_valid_locale(str('C')))
         else:
+            # the 1st is desired in Travis, not a problem if fails in user host 
             self.assertTrue(nikola.is_valid_locale(str('en_US.utf8')))
+            # this is supposed to be always true, and we need an universal
+            # fallback. Failure is not a problem in user host if he / she
+            # sets a valid (in his host) locale_fallback.
             self.assertTrue(nikola.is_valid_locale(str('C')))
 
 
@@ -93,20 +97,6 @@ class TestConfigLocale(unittest.TestCase):
                                                               translations) 
         self.assertEquals(fallback, locale_fallback)
         self.assertEquals(default, fallback)
-
-##    # implicit default is an ambigous spec case because backward compat nikola 6.0.4
-##    def test_implicit_default(self):
-##        locale_fallback, locale_default, LOCALES, translations = (
-##            loc_spa,
-##            None,
-##            {},
-##            {'en': ''},
-##            )
-##        fallback, default, locales = nikola.sanitized_locales(locale_fallback,
-##                                                              locale_default,
-##                                                              LOCALES,
-##                                                              translations)
-##        self.assertEquals(locales['en'], loc_eng)
         
     def test_extra_locales_deleted(self):
         locale_fallback, locale_default, LOCALES, translations = (
@@ -184,7 +174,9 @@ class TestConfigLocale(unittest.TestCase):
 class TestTestPreconditions(unittest.TestCase):
     """if this fails the other test in this module are mostly nonsense
        failure probably means the OS support for the failing locale is not
-       instaled
+       instaled.
+       To test in a host with other locales, replace both with different,
+       existing locales in the host.
     """
     def test_locale_eng_availability(self):
         self.assertTrue(nikola.is_valid_locale(loc_eng), "META ERROR: locale for english should be valid")

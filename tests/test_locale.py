@@ -14,8 +14,8 @@ if sys.platform == 'win32':
     loc_eng = str('English')
     loc_spa = str('Spanish')
 else:
-    loc_eng = str('en_US')
-    loc_spa = str('es_ES')
+    loc_eng = str('en_US.utf8')
+    loc_spa = str('es_ES.utf8')
 loc_C = str('C')
 loc_Cutf8 = str('C.utf8')
 

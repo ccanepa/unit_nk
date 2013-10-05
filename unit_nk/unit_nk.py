@@ -1,6 +1,6 @@
 import sys
 import locale
-import utils
+import .utils
 
 def is_valid_locale(locale_n):
     valid = False

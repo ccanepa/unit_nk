@@ -35,7 +35,7 @@ class TestInformative(unittest.TestCase):
     # switch assert to 0 to peek at how the host handle some locales
     def test_informative(self):
         from . import info
-        self.assertTrue(0)
+        self.assertTrue(1)
 
 
 class TestHarcodedFallbacks(unittest.TestCase):

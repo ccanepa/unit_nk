@@ -1,3 +1,4 @@
+from __future__ import print_function, unicode_literals
 import sys
 import locale
 from . import utils
@@ -37,7 +38,7 @@ def valid_locale_fallback(desired_locale=None):
     if not found_valid:
         msg = 'Could not find a valid fallback locale, tried: {0}'
         utils.LOGGER.warn(msg.format(candidates))
-    elif desired_locale != locale_n:
+    elif desired_locale and (desired_locale != locale_n):
         msg = 'Desired fallback locale {0} could not be set, using: {1}'
         utils.LOGGER.warn(msg.format(desired_locale, locale_n))
     return locale_n
@@ -97,7 +98,7 @@ def guess_locale_from_lang_linux(lang):
         locale_n = lang
     else:
         # this works in Travis when locale support set by Travis suggestion
-        locale_n = locale.normalize(lang).split('.')[0]
+        locale_n = (locale.normalize(lang).split('.')[0]) + '.utf8'
     return locale_n
 
 

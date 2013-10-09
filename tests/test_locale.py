@@ -183,3 +183,17 @@ class TestTestPreconditions(unittest.TestCase):
 
     def test_locale_esp_availability(self):
         self.assertTrue(nikola.is_valid_locale(str(loc_spa)), "META ERROR: locale for spanish should be valid")
+
+
+class TestcalendarRelated(unittest.TestCase):
+    def test_type_of_month_name(self):
+        """validate assumption calendar month name is of type str"""
+        import calendar
+        if sys.version_info[0] == 3:  # Python 3
+            with calendar.different_locale(str(loc_spa)):
+                s = calendar.month_name[1]
+        else:  # Python 2
+            with calendar.TimeEncoding(str(loc_spa)):
+                s = calendar.month_name[1]
+        self.assertTrue(type(s)==str)
+        

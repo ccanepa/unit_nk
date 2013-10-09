@@ -45,7 +45,6 @@ def valid_locale_fallback(desired_locale=None):
 
 
 def sanitized_locales(locale_fallback, locale_default, locales, translations):
-    locale_fallback = valid_locale_fallback(locale_fallback)
     # locales for languages not in translations are ignored
     extras = set(locales) - set(translations)
     if extras:
@@ -53,6 +52,15 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
         utils.LOGGER.warn(msg.format(extras))
         for lang in extras:
             del locales[lang]
+
+    # py2x: get/setlocale related functions require the locale string as a str
+    # so convert
+    locale_fallback = str(locale_fallback) if locale_fallback else None
+    locale_default = str(locale_default) if locale_default else None
+    for lang in locales:
+        locales[lang] = str(locales[lang])
+
+    locale_fallback = valid_locale_fallback(locale_fallback)
 
     # explicit but invalid locales are replaced with the sanitized locale_fallback
     for lang in locales:
@@ -88,14 +96,24 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
     return locale_fallback, locale_default, locales
 
 
+def locale_encodings(locales):
+    """returns a dict of lang: <encoding for locales[lang]>; locales assumed sanitized"""
+    encodings = {}
+    for lang in locales:
+        locale.setlocale(locale.LC_ALL, locales[lang])
+        loc, encoding = locale.getlocale()
+        encodings['lang'] = encoding
+    return encodings
+
+
 def guess_locale_from_lang_windows(lang):
-    return _windows_locale_guesses.get(lang, None)
+    return str(_windows_locale_guesses.get(lang, None))
 
 
 def guess_locale_from_lang_linux(lang):
     # compatibility v6.0.4
-    if is_valid_locale(lang):
-        locale_n = lang
+    if is_valid_locale(str(lang)):
+        locale_n = str(lang)
     else:
         # this works in Travis when locale support set by Travis suggestion
         locale_n = (locale.normalize(lang).split('.')[0]) + '.utf8'
@@ -103,8 +121,8 @@ def guess_locale_from_lang_linux(lang):
 
 
 _windows_locale_guesses = {
-    # some languages may need that the appropiate Language Pack from
-    # Microsoft be instaled
+    # some languages may need that the appropiate Microsoft's Language Pack
+    # be instaled; the 'str' bit will be added in the guess function
     "en":     "English",
     "bg":     "Bulgarian",
     "ca":     "Catalan",

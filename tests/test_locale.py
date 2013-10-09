@@ -18,11 +18,11 @@ import unit_nk.unit_nk as nikola
 
 import sys
 if sys.platform == 'win32':
-    loc_eng = str('English')
-    loc_spa = str('Spanish')
+    loc_eng = 'English'
+    loc_spa = 'Spanish'
 else:
-    loc_eng = str('en_US.utf8')
-    loc_spa = str('es_ES.utf8')
+    loc_eng = 'en_US.utf8'
+    loc_spa = 'es_ES.utf8'
 loc_C = str('C')
 loc_Cutf8 = str('C.utf8')
 
@@ -61,7 +61,7 @@ class TestConfigLocale(unittest.TestCase):
         self.assertTrue(nikola.is_valid_locale(sanitized_fallback))
 
     def test_explicit_good_fallback(self):
-        locale_fallback = loc_spa
+        locale_fallback = str(loc_spa)
         sanitized_fallback = nikola.valid_locale_fallback(desired_locale=locale_fallback)
         self.assertEquals(sanitized_fallback, locale_fallback)
             
@@ -122,7 +122,7 @@ class TestConfigLocale(unittest.TestCase):
                                                               locale_default,
                                                               LOCALES,
                                                               translations)
-        self.assertEquals(locales['en'], LOCALES['en'])
+        self.assertEquals(locales['en'], str(LOCALES['en']))
 
 
     def test_explicit_bad_locale_replaced_with_fallback(self):
@@ -179,7 +179,7 @@ class TestTestPreconditions(unittest.TestCase):
        existing locales in the host.
     """
     def test_locale_eng_availability(self):
-        self.assertTrue(nikola.is_valid_locale(loc_eng), "META ERROR: locale for english should be valid")
+        self.assertTrue(nikola.is_valid_locale(str(loc_eng)), "META ERROR: locale for english should be valid")
 
     def test_locale_esp_availability(self):
-        self.assertTrue(nikola.is_valid_locale(loc_spa), "META ERROR: locale for spanish should be valid")
+        self.assertTrue(nikola.is_valid_locale(str(loc_spa)), "META ERROR: locale for spanish should be valid")
